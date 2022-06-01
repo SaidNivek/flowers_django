@@ -1,0 +1,28 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="detail__img">
+    <img src="{{flower.image}}" alt="{{flower.name}}" />
+</div>
+<div class="detail__name">
+    <h1 class="title">{{flower.name}}</h1>
+</div>
+<div class="detail__container">
+    <div class="buttons">
+        <a href="" class="button is-info">
+            <span class="icon">
+                <i class="fas fa-edit"></i>
+            </span>
+        </a>
+        <a href="" class="button is-danger">
+            <span class="icon">
+                <i class="fas fa-trash-alt"></i>
+            </span>
+        </a>
+    </div>
+    <div class="detail__about">
+        <h4 class="title is-4">Description</h4>
+        <p>{{flower.description}}</p>
+    </div>
+</div>
+
+{% endblock %}
