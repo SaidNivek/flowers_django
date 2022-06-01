@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% comment %} for head title tags and helping us with SEO {% endcomment %}
+{% block title %}Flower{% endblock  %}
+
+{% block content %}
+
+<h1 class="title pt-5">Flowers</h1>
+<div class="gallery">
+  {% for flower in flowers %}
+  <a href="">
+    <div class="card">
+      <div class="card-image">
+        <figure class="image is-square">
+          <img src="{{flower.image}}" alt="{{flower.name}}" />
+        </figure>
+      </div>
+      <div class="card-header">
+        <p class="card-header-title">{{flower.name.name}}</p>
+      </div>
+    </div>
+  </a>
+	{% empty %}
+  <article class="message">
+    <div class="message-header">
+      <p>No Flowers Available</p>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}
