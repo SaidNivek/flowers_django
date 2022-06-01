@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView # This will import the class we are extending 
 from .models import Flower
 
 # Create your views here.
@@ -24,6 +25,16 @@ class FlowerList(TemplateView):
         if name != None:
             # .filter is the sql WHERE statement and name__icontains is doing a search for any name that contains the query param
             context["flowers"] = Flower.objects.filter(name__icontains=name)
+            # We add a header context that includes the search param
+            context["header"] = f"Searching for {name}"
         else:
             context["flowers"] = Flower.objects.all()
+            # default header for not searching 
+            context["header"] = "Trending Flowers"
         return context
+
+class FlowerCreate(CreateView):
+    model = Flower
+    fields = ['name', 'image', 'description']
+    template_name = "flower_create.html"
+    success_url = "/flowers/"
