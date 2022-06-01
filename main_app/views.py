@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView # This will import the class we are extending 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView # This will import the class we are extending 
 from django.views.generic import DetailView # This will allow us to use the django DetailView
 from .models import Flower
 from django.urls import reverse # needed by Django to go back to the artist detail page
@@ -57,3 +57,8 @@ class FlowerUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('flower_detail', kwargs={'pk': self.object.pk})
+
+class FlowerDelete(DeleteView):
+    model = Flower
+    template_name = "flower_delete_confirmation.html"
+    success_url = "/flowers/"
