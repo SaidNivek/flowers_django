@@ -18,5 +18,12 @@ class FlowerList(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["flowers"] = Flower.objects.all() # this is where we add the key into our context object for the view to use
+        # to get the query parameter we have to acccess it in the request.GET dictionary object        
+        name = self.request.GET.get("name")
+        # If a query exists we will filter by name 
+        if name != None:
+            # .filter is the sql WHERE statement and name__icontains is doing a search for any name that contains the query param
+            context["flowers"] = Flower.objects.filter(name__icontains=name)
+        else:
+            context["flowers"] = Flower.objects.all()
         return context
