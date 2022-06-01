@@ -12,3 +12,24 @@ class Flower(models.Model):
     
     class Meta:
         ordering = ['name']
+
+SEED_CHOICES = (
+    ('bulb', 'Bulb'),
+    ('seed', 'Seed'),
+    ('tuber', 'Tuber'),
+    ('corm', 'Corm'),
+    ('rhyzome', 'Rhyzome')
+)
+
+class Seed(models.Model):
+    
+    seed_type = models.CharField(
+        max_length=7,
+        choices = SEED_CHOICES,
+        default = 'seed'
+        )
+    seed_count = models.IntegerField(default=1)
+    flower = models.ForeignKey(Flower, on_delete=models.CASCADE, related_name="seeds")
+
+    def __str__(self):
+        return f"{self.flower.name} {self.seed_type}"

@@ -19,6 +19,23 @@
             </span>
         </a>
     </div>
+    <div class="detail__songs mb-5">
+        <h3 class="title is-3">Songs</h3>
+    
+        {% for seed in flower.seeds.all %}
+        <div class="song">
+          <span>Seed type: <b>{{seed.seed_type}}</b></span>
+          <span>Number of seeds: {{seed.seed_count}}</span>
+        </div>
+            {% empty %}
+        <article class="message">
+          <div class="message-header">
+            <p>No Seeds Available</p>
+          </div>
+        </article>
+    
+        {% endfor %}
+      </div>
     <div class="detail__about">
         <h4 class="title is-4">Description</h4>
         <p>{{flower.description}}</p>
