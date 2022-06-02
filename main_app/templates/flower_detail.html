@@ -7,6 +7,43 @@
     <h1 class="title">{{flower.name}}</h1>
 </div>
 <div class="detail__container">
+
+    <div class="detail__songs mb-5">
+
+        <h3 class="title is-3">Flowers</h3>
+        <span>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu"
+              >
+                <span>Add to Garden</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                {% for garden in gardens %}
+            <!-- each garden becomes a drop
+            down item with the ids needed to add to the join table  -->
+                <a
+                  href="{% url 'garden_flower_assoc' garden.pk flower.pk %}?assoc=add"
+                  class="dropdown-item"
+                >
+                  {{garden.garden_name}}
+                </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </span>
+
+
+    </div>
     <div class="buttons">
         <a href="{% url 'flower_update' flower.pk %}" class="button is-info"> Updates
             <span class="icon">
