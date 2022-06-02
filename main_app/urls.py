@@ -12,5 +12,6 @@ urlpatterns = [
     path('flowers/<int:pk>/delete', views.FlowerDelete.as_view(), name="flower_delete"),
     path('flowers/<int:pk>/seeds/new', views.SeedCreate.as_view(), name="seed_create"),
     path('gardens/<int:pk>/flowers/<int:flower_pk>/', views.GardenFlowerAssoc.as_view(), name="garden_flower_assoc"),
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/signup/', views.Signup.as_view(), name="signup")
 ]

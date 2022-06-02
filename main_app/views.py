@@ -9,6 +9,12 @@ from django.urls import reverse # needed by Django to go back to the artist deta
 from django.shortcuts import redirect # needed by Django to redirect after form submission
 # import models
 from .models import Flower, Seed, Garden # needed to create routes for the seed_create route
+# Needed for user login and user creation
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+# Auth - needed to protect routes that require user login
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -24,6 +30,7 @@ class Home(TemplateView):
 class About(TemplateView):
     template_name = "about.html"
 
+@method_decorator(login_required, name='dispatch')
 class FlowerList(TemplateView):
     template_name = "flower_list.html"
 
@@ -43,6 +50,7 @@ class FlowerList(TemplateView):
             context["header"] = "Trending Flowers"
         return context
 
+@method_decorator(login_required, name='dispatch')
 class FlowerCreate(CreateView):
     model = Flower
     fields = ['name', 'image', 'description']
@@ -58,6 +66,7 @@ class FlowerCreate(CreateView):
     def get_success_url(self):
         return reverse('flower_detail', kwargs={'pk': self.object.pk})
 
+@method_decorator(login_required, name='dispatch')
 class FlowerDetail(DetailView):
     model = Flower
     template_name = "flower_detail.html"
@@ -67,6 +76,7 @@ class FlowerDetail(DetailView):
         context["gardens"] = Garden.objects.all()
         return context
 
+@method_decorator(login_required, name='dispatch')
 class FlowerUpdate(UpdateView):
     model = Flower
     fields = ['name', 'image', 'description']
@@ -76,13 +86,14 @@ class FlowerUpdate(UpdateView):
     def get_success_url(self):
         return reverse('flower_detail', kwargs={'pk': self.object.pk})
 
+@method_decorator(login_required, name='dispatch')
 class FlowerDelete(DeleteView):
     model = Flower
     template_name = "flower_delete_confirmation.html"
     success_url = "/flowers/"
 
+@method_decorator(login_required, name='dispatch')
 class SeedCreate(View):
-
     def post(self, request, pk):
         seed_type = request.POST.get("seed_type")
         seed_count = request.POST.get("seed_count")
@@ -90,6 +101,7 @@ class SeedCreate(View):
         Seed.objects.create(seed_type=seed_type, seed_count=seed_count, flower=flower)
         return redirect('flower_detail', pk=pk)
 
+@method_decorator(login_required, name='dispatch')
 class GardenFlowerAssoc(View):
     def get(self, request, pk, flower_pk):
         # get the query param from the url
@@ -103,3 +115,20 @@ class GardenFlowerAssoc(View):
             # add to the join table the given song_id
             Garden.objects.get(pk=pk).flowers.add(flower_pk)
         return redirect('home')
+
+class Signup(View):
+    # show a form to fill out
+    def get(self, request):
+        form = UserCreationForm()
+        context = {"form": form}
+        return render(request, "registration/signup.html", context)
+    # on form ssubmit validate the form and login the user.
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("flower_list")
+        else:
+            context = {"form": form}
+            return render(request, "registration/signup.html", context)
