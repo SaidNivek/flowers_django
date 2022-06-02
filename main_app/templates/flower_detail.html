@@ -20,7 +20,42 @@
         </a>
     </div>
     <div class="detail__songs mb-5">
-        <h3 class="title is-3">Songs</h3>
+        <h3 class="title is-3">Seeds</h3>
+
+        <!-- inside detail songs element below the header -->
+
+<!-- Here you can see the action we provided
+    is to the song_create route with the artist pk -->
+    <form class="mb-5" action="{% url 'seed_create' flower.pk %}" method="post">
+        {% csrf_token %}
+        <div class="field has-addons">
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    name="seed_type"
+                    placeholder="Seed type"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input
+                    class="input"
+                    type="number"
+                    name="seed_count"
+                    placeholder="Number of seeds"
+                    min="1"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input class="button is-primary" type="submit" value="Add Seed" />
+            </div>
+        </div>
+    </form>
+    
+    <!-- before the for loop for songs -->
+
     
         {% for seed in flower.seeds.all %}
         <div class="song">

@@ -1,4 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% block content %}
-<h1>Flowers Home</h1>
+<div class="home__playlists">
+    {% for garden in gardens %}
+
+        <div class="playlist mb-5">
+            <h3 class="title is-3 has-text-success">{{garden.garden_name}}</h3>
+            <hr />
+
+            {% for flower in garden.flowers.all %}
+                <div class="song">
+                    <span>{{forloop.counter}} - </span>
+                    <span><b>{{flower.name}}</b></span>
+                    <span>{{flower.description}}</span>
+                    <span>
+                        <!--   Here we are creating an anchor
+                        tag that when clicked will hit our new
+                        route and send a query to remove the song     -->
+                        <a href="{% url 'garden_flower_assoc' garden.pk flower.pk %}?assoc=remove" class="button is-danger is-outlined">
+                        <span class="icon is-small">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        </a>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% empty %} 
+        <div class="playlist mb-5">"There are no flowers in this garden"</div>
+    {% endfor %}
+</div>
 {% endblock %}

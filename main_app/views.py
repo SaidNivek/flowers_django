@@ -6,12 +6,20 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView # This 
 from django.views.generic import DetailView # This will allow us to use the django DetailView
 from .models import Flower
 from django.urls import reverse # needed by Django to go back to the artist detail page
+from django.shortcuts import redirect # needed by Django to redirect after form submission
+# import models
+from .models import Flower, Seed, Garden # needed to create routes for the seed_create route
 
 # Create your views here.
 
 # Here we will be creating a class called Home and extending it from the View class
 class Home(TemplateView):
     template_name = "home.html"
+    # Here we have added the playlists as context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["gardens"] = Garden.objects.all()
+        return context
 
 class About(TemplateView):
     template_name = "about.html"
@@ -49,6 +57,11 @@ class FlowerDetail(DetailView):
     model = Flower
     template_name = "flower_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["gardens"] = Garden.objects.all()
+        return context
+
 class FlowerUpdate(UpdateView):
     model = Flower
     fields = ['name', 'image', 'description']
@@ -62,3 +75,26 @@ class FlowerDelete(DeleteView):
     model = Flower
     template_name = "flower_delete_confirmation.html"
     success_url = "/flowers/"
+
+class SeedCreate(View):
+
+    def post(self, request, pk):
+        seed_type = request.POST.get("seed_type")
+        seed_count = request.POST.get("seed_count")
+        flower = Flower.objects.get(pk=pk)
+        Seed.objects.create(seed_type=seed_type, seed_count=seed_count, flower=flower)
+        return redirect('flower_detail', pk=pk)
+
+class GardenFlowerAssoc(View):
+    def get(self, request, pk, flower_pk):
+        # get the query param from the url
+        assoc = request.GET.get("assoc")
+        if assoc == "remove":
+            # get the playlist by the id and
+            # remove from the join table the given song_id
+            Garden.objects.get(pk=pk).flowers.remove(flower_pk)
+        if assoc == "add":
+            # get the playlist by the id and
+            # add to the join table the given song_id
+            Garden.objects.get(pk=pk).flowers.add(flower_pk)
+        return redirect('home')

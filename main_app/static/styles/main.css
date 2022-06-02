@@ -76,3 +76,20 @@ body {
   .detail__container {
     margin-top: 500px;
   }
+
+  .detail__songs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.song {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.song:hover {
+    background-color: hsla(0, 0%, 100%, 0.1);
+    cursor: pointer;
+}
