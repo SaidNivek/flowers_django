@@ -38,7 +38,7 @@ class FlowerList(TemplateView):
             # We add a header context that includes the search param
             context["header"] = f"Searching for {name}"
         else:
-            context["flowers"] = Flower.objects.all()
+            context["flowers"] = Flower.objects.filter(user=self.request.user)
             # default header for not searching 
             context["header"] = "Trending Flowers"
         return context
@@ -49,7 +49,12 @@ class FlowerCreate(CreateView):
     template_name = "flower_create.html"
     success_url = "/flowers/"
 
-        # this will get the pk from the route and redirect to artist view
+    # This is our new method that will add the user into our submitted form
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(FlowerCreate, self).form_valid(form)
+
+    # this will get the pk from the route and redirect to artist view
     def get_success_url(self):
         return reverse('flower_detail', kwargs={'pk': self.object.pk})
 
